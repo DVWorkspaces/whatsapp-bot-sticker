@@ -81,12 +81,13 @@ client.on('message_create', async (msg) => {
             {
               sendMediaAsSticker: true,
               stickerName: 'github.com/picasso09',
-              stickerAuthor: `DVWORKSPACE-${jam}`
+              stickerAuthor: `DVWORKSPACE-${jam}`,
+              quotedMessageId:msg.id._serialized // reply client
             }
           );
           console.log(`💬 ${contact.pushname} : Sticker sent!\n`);
         } else {
-          msg.reply('Send image with caption .sticker');
+          msg.reply('fotonya mana');
         };
         break;
       case '.neofetch': // fitur neofetch
