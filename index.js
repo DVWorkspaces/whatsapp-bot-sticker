@@ -94,14 +94,29 @@ async function startBot() {
     if (type !== 'notify') return;
     const msg = messages[0];
     if (!msg.message) return;
-    
+
     const from = msg.key.remoteJid;
+
+    // WhiteList grup
+    const rawWhitelist = process.env.WHITELIST_GRUP || '';
+    const Whitelistgrup =   rawWhitelist.split(',').map(id => id.trim()).filter(id => id !== '');
+
+    // cek pesan berasal dari grup dengan tagline @g.us
+    const isgrup = from.endsWith('@g.us');
+
+    // Skip pesan jika bukan dari whitelist grup
+    if (isgrup && !whitelistgrup.includes(from)) {
+      console.log(`💬 'Skip chat' [${from}]\n`)
+      return;
+    }
+
     if (from === 'status@broadcast') return; // Skip read status Content Only See Main chat
+    if (from?.endsWith('@newsletter')) return; // Skip Read Channel Content ( Saluran )
     const body = getMessageText(msg);
     const pushname = msg.pushName || 'Unknown';
     const jam = moment().tz('Asia/Jakarta').format('dddd DD-MM-YYYY HH:mm:ss');
 
-    console.log(`💬 ${pushname} : ${body}\n`);
+    console.log(`💬 [${from}] ${pushname} : ${body}\n`);
 
     const resolved = resolveCommand(commands, body);
     if (!resolved) return;
